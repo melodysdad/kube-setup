@@ -7,6 +7,7 @@ from aws_cdk import (
     
     # aws_sqs as sqs,
 )
+import yaml
 
 from constructs import Construct
 
@@ -27,3 +28,15 @@ class KubeSetupStack(Stack):
             kubectl_layer=kubectl_layer
             
         )
+        mapping = eks
+        cluster.add_manifest("DevOpsNS",{"apiVersion":"v1",
+                                                               "kind":"Namespace",
+                                                               "metadata":{"name":"devops"}})
+        selector = eks.Selector(namespace="devops")
+        cluster.add_fargate_profile(id="DevOpsFGProfile",selectors=[selector])
+        # ymlstring = open('kubemanifests/volume.yml','r').read()
+        # volumemanifests = list(yaml.load_all(ymlstring,Loader=yaml.Loader))
+        # i=0
+        # for manifest in volumemanifests: 
+        #     cluster.add_manifest(f"DevOpsVolume{i}",manifest)
+        #     i+=1
