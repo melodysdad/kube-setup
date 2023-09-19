@@ -8,7 +8,7 @@ from kube_setup.network_stack import NetworkStack
 from kube_setup.file_system_stack import FileSystemStack
 
 app = cdk.App()
-KubeSetupStack(app, "KubeSetupStack")
 network_stack = NetworkStack(app, "NetworkStack")
-FileSystemStack(app, "FileSystemStack", network_stack.vpc)
+file_system_stack = FileSystemStack(app, "FileSystemStack", network_stack.vpc)
+KubeSetupStack(app, "KubeSetupStack", file_system=file_system_stack.kube_fs,vpc=network_stack.vpc)
 app.synth()
